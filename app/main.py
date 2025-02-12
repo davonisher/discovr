@@ -70,7 +70,7 @@ deepseek_api_key = os.getenv("DEEPSEEK_API_KEY")
 ###########################
 
 # Define the directory to store saved CSV files
-SAVED_RUNS_DIR = "/Users/macbook/Library/Mobile Documents/com~apple~CloudDocs/Professioneel/Coding projects/marktplaats/data/class_data"
+SAVED_RUNS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "class_data")
 # Create the directory if it doesn't exist
 os.makedirs(SAVED_RUNS_DIR, exist_ok=True)
 
@@ -81,18 +81,9 @@ if project_root not in sys.path:
     sys.path.append(project_root)
 
 #FILES
-USER_AGENTS_PATH = (
-    "/Users/macbook/Library/Mobile Documents/com~apple~CloudDocs/"
-    "Professioneel/Coding projects/marktplaats/user-agents.txt"
-)
-CAT_FILE_PATH = (
-    "/Users/macbook/Library/Mobile Documents/com~apple~CloudDocs/"
-    "Professioneel/Coding projects/marktplaats/cat.txt"
-)
-CSV_EXPORT_PATH = (
-    "/Users/macbook/Library/Mobile Documents/com~apple~CloudDocs/"
-    "Professioneel/Coding projects/marktplaats/data/class_data/{search_query_encoded}.csv"
-)
+USER_AGENTS_PATH = os.path.join(project_root, "user-agents.txt")
+CAT_FILE_PATH = os.path.join(project_root, "cat.txt")
+CSV_EXPORT_PATH = os.path.join(project_root, "data", "class_data", "{search_query_encoded}.csv")
 from modules.query_assistant_openai import show_query_assistant
 from modules import image_search as image_search
 #########################

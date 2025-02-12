@@ -4,7 +4,7 @@ playwright==1.27.0
 playwright-stealth==1.0.9
 streamlit==1.14.0
 altair==4.2.0
-sib-api-v3-sdk==8.5.0
+sib_api_v3_sdk
 matplotlib==3.5.2
 seaborn==0.11.2
 python-docx==0.8.11

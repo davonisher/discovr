@@ -53,6 +53,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from docx import Document
 from docx.shared import Inches
+import streamlit_shadcn_ui as ui
 
 # KEYS
 
@@ -1659,49 +1660,39 @@ def load_orchestrate_and_display():
     **Additionally**, we deliver these insights directly to your inbox, ensuring you never miss important market developments. 
     Stay informed, stay competitive, and let our data-driven analysis be your guide to success.
     """)    
+    
     # Create tabs
-    tabs = st.tabs([
+    tab_names = [
         "Getting Data", 
         "Enrich Data",
-        "Analysis",
+        "Analysis", 
         "Email Insights",
         "Comprehensive Analysis",
         "Dashboard",
         "Background Analysis",
         "Image Search"
-    ])
+    ]
+    
+    current_tab = ui.tabs(
+        options=tab_names,
+        default_value="Getting Data", 
+        key="tabs"
+    )
 
-    # Tab 1: Getting Data
-    with tabs[0]:
-        tab_1_getting_data()
+    # Map tab names to their corresponding functions
+    tab_functions = {
+        "Getting Data": tab_1_getting_data,
+        "Enrich Data": tab_2_enrich_data, 
+        "Analysis": tab_3_analysis,
+        "Email Insights": tab_4_email_insights,
+        "Comprehensive Analysis": tab_5_comprehensive_analysis,
+        "Dashboard": tab_6_dashboard,
+        "Background Analysis": tab_7_background_analysis,
+        "Image Search": tab_8_image_search
+    }
 
-    # Tab 2: Enrich Data  
-    with tabs[1]:
-        tab_2_enrich_data()
-
-    # Tab 3: Analysis
-    with tabs[2]:
-        tab_3_analysis()
-
-    # Tab 4: Email Insights
-    with tabs[3]:
-        tab_4_email_insights()
-
-    # Tab 5: Comprehensive Analysis
-    with tabs[4]:
-        tab_5_comprehensive_analysis()
-
-    # Tab 6: Dashboard
-    with tabs[5]:
-        tab_6_dashboard()
-
-    # Tab 7: Background Analysis
-    with tabs[6]:
-        tab_7_background_analysis()
-
-    # Tab 8: Image Search
-    with tabs[7]:
-        tab_8_image_search()
+    # Call the function for the selected tab
+    tab_functions[current_tab]()
 
 
 

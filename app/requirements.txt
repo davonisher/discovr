@@ -12,4 +12,5 @@ price-parser==0.3.4
 sib-api-v3-sdk==7.6.0
 greenlet==3.0.3
 plotly==6.0.0
+groq==0.18.0
 

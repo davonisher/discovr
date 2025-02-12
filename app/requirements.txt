@@ -1,6 +1,6 @@
 requests==2.31.0
 pandas==2.1.1
-playwright==1.41.2
+playwright==1.50.0
 tf-playwright-stealth==1.1.1
 streamlit==1.42.0
 altair==5.0.1

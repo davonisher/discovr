@@ -40,7 +40,6 @@ from docx import Document
 from docx.shared import Inches
 import time
 import openai
-from openai import OpenAI
 from price_parser import Price
 import streamlit as st
 import pandas as pd

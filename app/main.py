@@ -70,21 +70,21 @@ deepseek_api_key = os.getenv("DEEPSEEK_API_KEY")
 #  FILE & PATH CONSTANTS  #
 ###########################
 
-# Define the directory to store saved CSV files
-SAVED_RUNS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "class_data")
+# Define the directory to store saved CSV files - using streamlit's temp directory
+SAVED_RUNS_DIR = os.path.join("/tmp", "class_data")
 # Create the directory if it doesn't exist
 os.makedirs(SAVED_RUNS_DIR, exist_ok=True)
 
 # Make modules accessible if they're in a parent folder
 current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.join(current_dir, "..")
+project_root = os.path.dirname(current_dir)  # Go up one level from app/
 if project_root not in sys.path:
     sys.path.append(project_root)
 
-#FILES
-USER_AGENTS_PATH = os.path.join(project_root, "user-agents.txt")
-CAT_FILE_PATH = os.path.join(project_root, "cat.txt")
-CSV_EXPORT_PATH = os.path.join(project_root, "data", "class_data", "{search_query_encoded}.csv")
+# FILES - using relative paths from the app directory
+USER_AGENTS_PATH = os.path.join(current_dir, "data", "user-agents.txt")
+CAT_FILE_PATH = os.path.join(current_dir, "data", "cat.txt")
+CSV_EXPORT_PATH = os.path.join(SAVED_RUNS_DIR, "{search_query_encoded}.csv")
 from modules.query_assistant_openai import show_query_assistant
 from modules import image_search as image_search
 #########################
@@ -105,8 +105,12 @@ def load_user_agents() -> list:
     """
     Load user agents from a text file, one per line.
     """
-    with open(USER_AGENTS_PATH, "r") as f:
-        return [line.strip() for line in f if line.strip()]
+    try:
+        with open(USER_AGENTS_PATH, "r") as f:
+            return [line.strip() for line in f if line.strip()]
+    except FileNotFoundError:
+        # Return a default user agent if file not found
+        return ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"]
 
 async def scrape_single_page(
     page_num: int,
@@ -121,61 +125,66 @@ async def scrape_single_page(
     Gathers title, price, usage, description, link, date into 'listings' list.
     """
     url = f"{base_url}/l/{category}/q/{search_query_encoded}/p/{page_num}/"
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
-        context = await browser.new_context(user_agent=user_agent)
-        page = await context.new_page()
+    
+    try:
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=True)
+            context = await browser.new_context(user_agent=user_agent)
+            page = await context.new_page()
 
-        # Stealth for more human-like scraping
-        await stealth_async(page)
-        await page.route("**/*", block_aggressively)
+            # Stealth for more human-like scraping
+            await stealth_async(page)
+            await page.route("**/*", block_aggressively)
 
-        try:
-            await page.goto(url, timeout=60000)
-            await asyncio.sleep(2)  # Wait a bit for the page to load
-            await page.wait_for_load_state('networkidle')
-        except TimeoutError:
-            print(f"Timeout at page {page_num}, url={url}")
-            await browser.close()
-            return
-        except Exception as e:
-            print(f"Error loading page {page_num}: {e}")
-            await browser.close()
-            return
-
-        # Grab listing elements
-        listing_elements = await page.query_selector_all('li[class*="Listing"]')
-        for element in listing_elements:
             try:
-                title_el = await element.query_selector('h3[class*="Listing-title"]')
-                price_el = await element.query_selector('p[class*="Listing-price"]')
-                usage_el = await element.query_selector('span[class*="hz-Attribute hz-Attribute--default"]')
-                desc_el = await element.query_selector('p[class*="Listing-description"]')
-                link_el = await element.query_selector('a[class*="Link"]')
-                date_el = await element.query_selector('span[class*="Listing-date"]')
+                await page.goto(url, timeout=60000)
+                await asyncio.sleep(2)  # Wait a bit for the page to load
+                await page.wait_for_load_state('networkidle')
+            except TimeoutError:
+                print(f"Timeout at page {page_num}, url={url}")
+                await browser.close()
+                return
+            except Exception as e:
+                print(f"Error loading page {page_num}: {e}")
+                await browser.close()
+                return
 
-                title_text = (await title_el.inner_text()).strip() if title_el else 'No title'
-                price_text = (await price_el.inner_text()).strip() if price_el else 'No price'
-                usage_text = (await usage_el.inner_text()).strip() if usage_el else 'No usage'
-                desc_text = (await desc_el.inner_text()).strip() if desc_el else 'No description'
-                href = (await link_el.get_attribute('href')) if link_el else ''
-                full_link = (
-                    "https://www.marktplaats.nl" + href
-                    if href.startswith('/v/') else 'No link'
-                )
-                date_text = (await date_el.inner_text()).strip() if date_el else 'No date'
+            # Grab listing elements
+            listing_elements = await page.query_selector_all('li[class*="Listing"]')
+            for element in listing_elements:
+                try:
+                    title_el = await element.query_selector('h3[class*="Listing-title"]')
+                    price_el = await element.query_selector('p[class*="Listing-price"]')
+                    usage_el = await element.query_selector('span[class*="hz-Attribute hz-Attribute--default"]')
+                    desc_el = await element.query_selector('p[class*="Listing-description"]')
+                    link_el = await element.query_selector('a[class*="Link"]')
+                    date_el = await element.query_selector('span[class*="Listing-date"]')
 
-                listings.append({
-                    'Title': title_text,
-                    'Price': price_text,
-                    'Description': desc_text,
-                    'Link': full_link,
-                    'Date': date_text,
-                    'Usage': usage_text,
-                })
-            except Exception as ex:
-                print(f"Error parsing listing on page {page_num}: {ex}")
-        await browser.close()
+                    title_text = (await title_el.inner_text()).strip() if title_el else 'No title'
+                    price_text = (await price_el.inner_text()).strip() if price_el else 'No price'
+                    usage_text = (await usage_el.inner_text()).strip() if usage_el else 'No usage'
+                    desc_text = (await desc_el.inner_text()).strip() if desc_el else 'No description'
+                    href = (await link_el.get_attribute('href')) if link_el else ''
+                    full_link = (
+                        "https://www.marktplaats.nl" + href
+                        if href.startswith('/v/') else 'No link'
+                    )
+                    date_text = (await date_el.inner_text()).strip() if date_el else 'No date'
+
+                    listings.append({
+                        'Title': title_text,
+                        'Price': price_text,
+                        'Description': desc_text,
+                        'Link': full_link,
+                        'Date': date_text,
+                        'Usage': usage_text,
+                    })
+                except Exception as ex:
+                    print(f"Error parsing listing on page {page_num}: {ex}")
+            await browser.close()
+    except Exception as e:
+        print(f"Error in scrape_single_page: {e}")
+        return
 
 async def scrape_marktplaats_playwright(search_query: str, category: str, max_pages: int) -> pd.DataFrame:
     """
@@ -189,9 +198,11 @@ async def scrape_marktplaats_playwright(search_query: str, category: str, max_pa
     # Load a list of user agents for rotating
     user_agents = load_user_agents()
 
+    # Create tasks for all pages
+    tasks = []
     for page_num in range(1, max_pages + 1):
         user_agent = random.choice(user_agents)
-        await scrape_single_page(
+        task = scrape_single_page(
             page_num=page_num,
             base_url=base_url,
             category=category,
@@ -199,6 +210,10 @@ async def scrape_marktplaats_playwright(search_query: str, category: str, max_pa
             user_agent=user_agent,
             listings=listings
         )
+        tasks.append(task)
+
+    # Run all tasks concurrently
+    await asyncio.gather(*tasks)
 
     df = pd.DataFrame(listings)
     return df
@@ -1070,32 +1085,27 @@ def get_class_data_files():
     - List of filenames if the directory exists.
     - Empty list if the directory does not exist.
     """
-    folder_path = "/Users/macbook/Library/Mobile Documents/com~apple~CloudDocs/Professioneel/Coding projects/marktplaats/data/class_data"
     try:
-        files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
+        files = [f for f in os.listdir(SAVED_RUNS_DIR) if os.path.isfile(os.path.join(SAVED_RUNS_DIR, f))]
         return files
     except FileNotFoundError:
         st.error("❌ class_data folder not found. Please check the file path.")
         return []
 
-# TO DO: 
-# FIX FUCNITON
-# Implement function to get raw data files
-
 def get_raw_data_files():
     """
-    Retrieves a list of files from the class_data directory.
+    Retrieves a list of files from the raw_data directory.
 
     Returns:
     - List of filenames if the directory exists.
     - Empty list if the directory does not exist.
     """
-    folder_path = "/Users/macbook/Library/Mobile Documents/com~apple~CloudDocs/Professioneel/Coding projects/marktplaats/data/raw_data"
+    raw_data_dir = os.path.join(current_dir, "data", "raw_data")
     try:
-        files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
+        files = [f for f in os.listdir(raw_data_dir) if os.path.isfile(os.path.join(raw_data_dir, f))]
         return files
     except FileNotFoundError:
-        st.error("❌ class_data folder not found. Please check the file path.")
+        st.error("❌ raw_data folder not found. Please check the file path.")
         return []
 def get_category_options():
     """

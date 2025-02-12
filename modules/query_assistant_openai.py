@@ -6,7 +6,7 @@ import logging
 import streamlit as st
 
 
-client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 async def _deepseek_improve_query(user_description: str) -> str:
     """

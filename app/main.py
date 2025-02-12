@@ -1643,8 +1643,9 @@ def sanitize_filename_component(value: str) -> str:
 def load_orchestrate_and_display():
     """
     Enhanced UI with tabs for better organization and user experience.
+    Optimized for mobile devices.
     """
-    st.set_page_config(page_title="A Trader's Edge", layout="wide", initial_sidebar_state="expanded")
+    st.set_page_config(page_title="A Trader's Edge", layout="centered", initial_sidebar_state="collapsed")
     
     # Title and Description
     st.title("🔍 A Trader's Edge")

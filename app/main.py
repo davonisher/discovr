@@ -468,9 +468,10 @@ def send_email_alert(df: pd.DataFrame, insights: str):
     Send market insights via email using Brevo API.
     """
     
-    # Instantiate the client
-    sib_api_v3_sdk.configuration.api_key['api-key'] = os.getenv("BREVO_API_KEY")
-    api_instance = sib_api_v3_sdk.EmailCampaignsApi()
+    # Instantiate the client with proper configuration
+    configuration = sib_api_v3_sdk.Configuration()
+    configuration.api_key['api-key'] = os.getenv("BREVO_API_KEY")
+    api_instance = sib_api_v3_sdk.EmailCampaignsApi(sib_api_v3_sdk.ApiClient(configuration))
 
     # Define the campaign settings
     email_campaigns = sib_api_v3_sdk.CreateEmailCampaign(

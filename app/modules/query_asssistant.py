@@ -1,9 +1,9 @@
-from openai import OpenAI 
 import asyncio
 import json
 import logging
 import streamlit as st
 from config import deepseek_api_key
+from openai import OpenAI 
 
 client = OpenAI(base_url="https://api.deepseek.com", api_key=deepseek_api_key)
 async def _deepseek_improve_query(user_description: str) -> str:

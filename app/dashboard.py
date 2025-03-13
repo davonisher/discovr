@@ -17,7 +17,7 @@ from modules.scrapers.scrape_vinted import scrape_vinted_playwright
 from modules.scrapers.scrape_ebay import scrape_ebay_playwright
 from modules.scrapers.scrape_catawiki import scrape_catawiki_playwright
 from modules.scrapers.scraper_markt_de import scrape_markt_playwright
-from modules.query_asssistant import show_query_assistant
+from modules.query_assistant import show_query_assistant
 from modules import image_search
 import os
 import sys

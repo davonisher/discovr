@@ -6,7 +6,8 @@ import random
 import urllib.parse
 from app.utils import load_user_agents
 import os
-os.system("playwright install chromium")
+os.system("playwright install")
+os.system("playwright install-deps")
 
 # Function to block non-document resources
 async def block_aggressively(route):

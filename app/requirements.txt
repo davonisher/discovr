@@ -7,7 +7,7 @@ altair==5.0.1
 matplotlib==3.8.0
 seaborn==0.12.2
 python-docx==0.8.11
-openai==0.28.0
+openai==1.66.3
 price-parser==0.3.4
 sib-api-v3-sdk==7.6.0
 greenlet==3.1.1

@@ -6,7 +6,7 @@ import random
 import urllib.parse
 from app.utils import load_user_agents
 import os
-os.system("sudo playwright install-deps")
+os.system("sudo playwright install --with-deps")
 
 # Function to block non-document resources
 async def block_aggressively(route):

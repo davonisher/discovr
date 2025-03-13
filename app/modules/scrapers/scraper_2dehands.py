@@ -5,6 +5,8 @@ import pandas as pd
 import random
 import urllib.parse
 
+from app.utils import load_user_agents
+
 # Functie om niet-document resources te blokkeren
 async def block_aggressively(route):
     if route.request.resource_type != "document":
@@ -12,9 +14,7 @@ async def block_aggressively(route):
     else:
         await route.continue_()
 
-# User agents voor roterende headers
-with open("/data/user-agents.txt") as f:
-    USER_AGENTS = f.read().splitlines()
+USER_AGENTS = load_user_agents()
 
 async def scrape_2dehands_playwright(
     search_query,

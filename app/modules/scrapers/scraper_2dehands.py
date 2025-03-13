@@ -13,7 +13,7 @@ async def block_aggressively(route):
         await route.continue_()
 
 # User agents voor roterende headers
-with open("/Users/macbook/Library/Mobile Documents/com~apple~CloudDocs/Professioneel/Coding projects/marktplaats/app/data/user-agents.txt") as f:
+with open("/data/user-agents.txt") as f:
     USER_AGENTS = f.read().splitlines()
 
 async def scrape_2dehands_playwright(

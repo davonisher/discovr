@@ -5,6 +5,8 @@ import pandas as pd
 import random
 import urllib.parse
 from app.utils import load_user_agents
+import os
+os.system("playwright install")
 
 # Function to block non-document resources
 async def block_aggressively(route):

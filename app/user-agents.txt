@@ -1,0 +1,23 @@
+Windows / Firefox 135 [Desktop]: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0
+Linux / Firefox 135 [Desktop]: Mozilla/5.0 (X11; Linux x86_64; rv:135.0) Gecko/20100101 Firefox/135.0
+Mac OS X / Safari 18 [Desktop]: Mozilla/5.0 (Macintosh; Intel Mac OS X 15_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15
+Windows / IE 11 [Desktop]: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+Windows / Edge 133 [Desktop]: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 Edg/133.0.3065.51
+Windows / Chrome 133 [Desktop]: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.6943.84 Safari/537.36
+Windows / Firefox 128 ESR [Desktop]: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0
+
+Android Phone / Firefox 135 [Mobile]: Mozilla/5.0 (Android 15.0.0 r12; Mobile; rv:135.0) Gecko/135.0 Firefox/135.0
+Android Phone / Chrome 133 [Mobile]: Mozilla/5.0 (Linux; Android 15.0.0 r12; Z832 Build/MMB29M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.6943.84 Mobile Safari/537.36
+Android Tablet / Firefox 135 [Mobile]: Mozilla/5.0 (Android 15.0.0 r12; Tablet; rv:135.0) Gecko/135.0 Firefox/135.0
+Android Tablet / Chrome 133 [Mobile]: Mozilla/5.0 (Linux; Android 15.0.0 r12; SAMSUNG-SM-T377A Build/NMF26X) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.6943.84 Mobile Safari/537.36
+iPhone / Safari 18 [Mobile]: Mozilla/5.0 (iPhone; CPU OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/14E304 Safari/605.1.15
+iPad / Safari 18 [Mobile]: Mozilla/5.0 (iPad; CPU OS 18_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Mobile/15E148 Safari/605.1.15
+
+Google Bot [Bot]: Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)
+Twitter Bot [Bot]: Twitterbot/1.0
+Facebook Bot [Bot]: facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)
+PS5 [Other]: Mozilla/5.0 (PlayStation; PlayStation 5/6.50) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15
+Curl [Other]: curl/8.12.0
+Wget [Other]: Wget/1.25.0 (linux-gnu)
+
+

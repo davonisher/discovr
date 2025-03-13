@@ -1,14 +1,11 @@
+from openai import OpenAI 
 import asyncio
 import json
 import logging
 import streamlit as st
+from config import deepseek_api_key
 
-
-client = OpenAI(
-    api_key="sk-01f1247a98d243db8ffb035de5ba771f",
-    base_url="https://api.deepseek.com",
-)
-
+client = OpenAI(base_url="https://api.deepseek.com", api_key=deepseek_api_key)
 async def _deepseek_improve_query(user_description: str) -> str:
     """
     Calls Deepseek's chat API with a system + user prompt to produce a single
